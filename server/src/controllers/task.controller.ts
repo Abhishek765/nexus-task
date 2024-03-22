@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { TaskModel } from '../models/task.model';
-import { CustomRequestType } from '../middlewares/auth';
 
 export const createTask = async (req: Request, res: Response) => {
   const newTask = new TaskModel({
@@ -51,6 +50,56 @@ export const getSingleTask = async (req: Request, res: Response) => {
     res.status(500).json({
       error,
       message: 'Fetching task failed'
+    });
+  }
+};
+
+export const updateTaskStatus = async (req: Request, res: Response) => {
+  const _id = req.params.id;
+  const { status } = req.body;
+
+  try {
+    const updatedTask = await TaskModel.findOneAndUpdate(
+      { _id, owner: (req as any).user._id },
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+
+    res.status(200).json({ message: 'Updated Task', updatedTask });
+  } catch (error) {
+    res.status(500).json({
+      error,
+      message: 'Update task status failed'
+    });
+  }
+};
+
+export const deleteTask = async (req: Request, res: Response) => {
+  const _id = req.params.id;
+
+  try {
+    const deletedTask = await TaskModel.findOneAndDelete({
+      _id,
+      owner: (req as any).user._id
+    });
+
+    if (!deletedTask) {
+      return res
+        .status(404)
+        .json({ message: 'Task not found! Nothing to delete' });
+    }
+
+    res
+      .status(200)
+      .json({ message: 'Task Deleted Successfully!', deletedTask });
+  } catch (error) {
+    res.status(500).json({
+      error,
+      message: 'Task Deletion failed'
     });
   }
 };

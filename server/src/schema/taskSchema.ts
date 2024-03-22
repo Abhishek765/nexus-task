@@ -7,3 +7,9 @@ export const createTaskSchema = z.object({
     .union([z.literal('TODO'), z.literal('IN_PROGRESS'), z.literal('DONE')])
     .optional()
 });
+
+export const updateTaskStatusSchema = z.object({
+  status: z
+    .union([z.literal('TODO'), z.literal('IN_PROGRESS'), z.literal('DONE')])
+    .optional()
+});
