@@ -1,14 +1,22 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
 import { userRouter } from './routes/user.routes';
 import { taskRouter } from './routes/task.routes';
+
 const app = express();
+
+dotenv.config({
+  path: './.env.production'
+});
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true
+    origin: [
+      `${process.env.CORS_ORIGIN_DEV}`,
+      `${process.env.CORS_ORIGIN_PROD}`
+    ]
   })
 );
 

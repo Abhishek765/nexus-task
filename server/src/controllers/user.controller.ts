@@ -64,7 +64,7 @@ export const login = async (
     const payload = {
       _id: user._id,
       email: user.email,
-      name: user.email
+      name: user.name
     };
 
     const token = jwt.sign(
@@ -76,7 +76,7 @@ export const login = async (
       }
     );
 
-    res.status(200).header('auth-token', token).json({ token: token });
+    res.status(200).header('auth-token', token).json({ token: token, user });
   } catch (error) {
     res.status(500).json({
       message: 'Something went wrong while sign in',
