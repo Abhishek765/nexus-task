@@ -4,6 +4,7 @@ import { UserModel } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { AUTH_COOKIE_KEY, cookieOptions } from '../constants';
+import { CustomRequestType } from '../middlewares/auth';
 
 export const register = async (
   req: Request<{}, {}, CreateUserType>,
@@ -97,4 +98,25 @@ export const logout = async (
     .status(200)
     .cookie(AUTH_COOKIE_KEY, '', { ...cookieOptions, maxAge: 0 })
     .json({ message: 'Logged out successfully' });
+};
+
+export const getUserProfile = async (
+  req: Request<{}, {}, UserLoginType> | CustomRequestType,
+  res: Response
+) => {
+  try {
+    const user = await UserModel.findById((req as CustomRequestType).user);
+
+    if (!user) return res.status(409).json({ message: 'User not found' });
+
+    res.status(200).json({
+      message: 'User profile fetched successfully',
+      user
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Something went wrong while fetching user profile',
+      error
+    });
+  }
 };

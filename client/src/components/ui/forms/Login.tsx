@@ -2,15 +2,13 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { Input } from "../inputs";
 import { PrimaryButton } from "../buttons";
-import { checkIsEmailValid } from "../../utils/helperFunctions";
-// import { useAuth } from "../../context/Auth";
-import { useUserContext } from "../../context/User";
+import { checkIsEmailValid } from "../../../utils/helperFunctions";
+import { useUserContext } from "../../../context/User";
+import { Input } from "../inputs";
 
 const Login = () => {
   const navigate = useNavigate();
-  // const { setAuthToken } = useAuth();
   const { setUser } = useUserContext();
 
   const [formData, setFormData] = useState({
@@ -45,9 +43,7 @@ const Login = () => {
       const { user } = response.data;
       toast.success("Login successful");
 
-      // save the token and user
       if (user) {
-        // setAuthToken(token);
         setUser(user);
       }
 

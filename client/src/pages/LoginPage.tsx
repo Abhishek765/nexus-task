@@ -1,4 +1,4 @@
-import { Login } from "../components/forms";
+import { Login } from "../components/ui/forms";
 
 const LoginPage = () => {
   return (

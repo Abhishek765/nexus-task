@@ -2,7 +2,7 @@ import { InputHTMLAttributes } from "react";
 
 interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
-  label: string;
+  label?: string;
   type: string;
   placeholder: string;
   value: string;
@@ -21,12 +21,14 @@ const Input = ({
 }: InputFieldProps) => {
   return (
     <div className="mb-4">
-      <label
-        htmlFor={id}
-        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+        >
+          {label}
+        </label>
+      )}
       <input
         type={type}
         id={id}

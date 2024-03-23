@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { Input } from "../inputs";
 import { PrimaryButton } from "../buttons";
 import axios from "axios";
 import { useState } from "react";
-import { checkIsEmailValid } from "../../utils/helperFunctions";
+import { checkIsEmailValid } from "../../../utils/helperFunctions";
+import { Input } from "../inputs";
 
 //!: this whole form logic can be replaced with react hook form in a better way
 const Register = () => {
