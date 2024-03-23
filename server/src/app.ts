@@ -16,7 +16,8 @@ app.use(
     origin: [
       `${process.env.CORS_ORIGIN_DEV}`,
       `${process.env.CORS_ORIGIN_PROD}`
-    ]
+    ],
+    credentials: true
   })
 );
 

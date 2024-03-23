@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Input } from "../inputs";
 import { PrimaryButton } from "../buttons";
 import axios from "axios";
@@ -28,10 +28,17 @@ const Register = () => {
   };
 
   const handleSubmit = async () => {
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
     try {
       await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/users/register`,
-        formData
+        formData,
+        config
       );
       toast.success("Registration successful");
       navigate("/login");
@@ -123,7 +130,6 @@ const Register = () => {
           <PrimaryButton onClick={handleFormSubmit}>Sign up</PrimaryButton>
         </div>
       </div>
-      <Toaster position="top-center" />
     </>
   );
 };

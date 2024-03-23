@@ -1,17 +1,17 @@
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "../inputs";
 import { PrimaryButton } from "../buttons";
 import { checkIsEmailValid } from "../../utils/helperFunctions";
-import { useAuth } from "../../context/Auth";
+// import { useAuth } from "../../context/Auth";
 import { useUserContext } from "../../context/User";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setAuthToken } = useAuth();
-  const { saveUser } = useUserContext();
+  // const { setAuthToken } = useAuth();
+  const { setUser } = useUserContext();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -29,18 +29,26 @@ const Login = () => {
   };
 
   const handleSubmit = async () => {
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/users/login`,
-        formData
+        formData,
+        config
       );
-      const { token, user } = response.data;
+      const { user } = response.data;
       toast.success("Login successful");
 
       // save the token and user
-      if (token && user) {
-        setAuthToken(token);
-        saveUser(user);
+      if (user) {
+        // setAuthToken(token);
+        setUser(user);
       }
 
       navigate("/");
@@ -62,9 +70,6 @@ const Login = () => {
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-      isValid = false;
-    } else if (formData.password.length < 6) {
-      newErrors.password = "password must be at least 6 characters";
       isValid = false;
     } else {
       newErrors.password = "";
@@ -116,7 +121,6 @@ const Login = () => {
           <PrimaryButton onClick={handleFormSubmit}>Login</PrimaryButton>
         </div>
       </div>
-      <Toaster position="top-center" />
     </>
   );
 };

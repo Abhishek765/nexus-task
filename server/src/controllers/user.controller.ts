@@ -3,6 +3,7 @@ import { CreateUserType, UserLoginType } from '../types/user';
 import { UserModel } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { AUTH_COOKIE_KEY, cookieOptions } from '../constants';
 
 export const register = async (
   req: Request<{}, {}, CreateUserType>,
@@ -76,11 +77,24 @@ export const login = async (
       }
     );
 
-    res.status(200).header('auth-token', token).json({ token: token, user });
+    res
+      .status(200)
+      .cookie(AUTH_COOKIE_KEY, token, cookieOptions)
+      .json({ user });
   } catch (error) {
     res.status(500).json({
       message: 'Something went wrong while sign in',
       error
     });
   }
+};
+
+export const logout = async (
+  _req: Request<{}, {}, UserLoginType>,
+  res: Response
+) => {
+  return res
+    .status(200)
+    .cookie(AUTH_COOKIE_KEY, '', { ...cookieOptions, maxAge: 0 })
+    .json({ message: 'Logged out successfully' });
 };

@@ -1,19 +1,24 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useContext } from "react";
 import { UserDataType } from "../types/user.types";
+import { localStorageKeys } from "../utils/constants";
+import { usePersistedState } from "../hooks";
 
 interface UserContextType {
   user: UserDataType;
-  saveUser: (user: UserDataType) => void;
+  setUser: (user: UserDataType) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, saveUser] = useState<UserDataType>(null);
+  const [user, setUser] = usePersistedState<UserDataType>(
+    localStorageKeys.USER_DATA,
+    null
+  );
 
   return (
-    <UserContext.Provider value={{ user, saveUser }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );

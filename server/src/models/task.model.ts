@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { models } from 'mongoose';
 import { DATA_MODEL_KEYS } from '../constants';
 
 const taskSchema = new mongoose.Schema(
@@ -24,4 +24,5 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const TaskModel = mongoose.model(DATA_MODEL_KEYS.Task, taskSchema);
+export const TaskModel =
+  models.Task || mongoose.model(DATA_MODEL_KEYS.Task, taskSchema);

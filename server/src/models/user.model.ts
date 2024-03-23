@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { models } from 'mongoose';
 import { DATA_MODEL_KEYS } from '../constants';
 import bcrypt from 'bcrypt';
 
@@ -85,4 +85,5 @@ userSchema.methods.toJSON = function () {
   return user;
 };
 
-export const UserModel = mongoose.model(DATA_MODEL_KEYS.User, userSchema);
+export const UserModel =
+  models.User || mongoose.model(DATA_MODEL_KEYS.User, userSchema);

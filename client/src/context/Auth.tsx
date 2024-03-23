@@ -1,16 +1,22 @@
 /* eslint-disable react-refresh/only-export-components */
 import axios from "axios";
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useContext, useEffect } from "react";
+import { usePersistedState } from "../hooks";
+import { localStorageKeys } from "../utils/constants";
+import { AuthDataType } from "../types/auth.types";
 
 interface AuthContextType {
-  authToken: string | null;
-  setAuthToken: (token: string | null) => void;
+  authToken: AuthDataType;
+  setAuthToken: (token: AuthDataType) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [authToken, setAuthToken] = useState<string | null>(null);
+  const [authToken, setAuthToken] = usePersistedState<AuthDataType>(
+    localStorageKeys.AUTH_TOKEN,
+    null
+  );
 
   useEffect(() => {
     if (authToken) {
