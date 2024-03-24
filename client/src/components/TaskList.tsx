@@ -31,8 +31,9 @@ const TaskList = ({ taskStatusFilter }: TaskListProps) => {
       setFetchTasks(false);
     } catch (error: any) {
       const axiosErrorMessage = error?.response?.data?.message;
-
-      toast.error(axiosErrorMessage ?? "Failed to fetch task list");
+      if (!axiosErrorMessage) {
+        toast.error("Failed to fetch task list");
+      }
     } finally {
       setLoading(false);
     }

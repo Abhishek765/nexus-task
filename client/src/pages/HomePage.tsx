@@ -8,12 +8,14 @@ import { Select } from "../components/ui/selectors";
 import { TASK_FILTER } from "../types/task.types";
 import { LogoutIcon } from "../assets/svg/svgLinks";
 import { filterOptions } from "../utils/constants";
+import { useTaskListContext } from "../context/TaskList";
 
 const TaskList = lazy(() => import("../components/TaskList"));
 
 const HomePage = () => {
   const { user, setUser } = useUserContext();
   const navigate = useNavigate();
+  const { setTaskList } = useTaskListContext();
 
   const [taskStatusFilter, setTaskStatusFilter] = useState<TASK_FILTER>(
     TASK_FILTER.ALL
@@ -28,6 +30,7 @@ const HomePage = () => {
         }
       );
       setUser(null);
+      setTaskList([]);
       toast.success(data.message);
       navigate("/login");
     } catch (error) {
