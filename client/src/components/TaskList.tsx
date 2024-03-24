@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useTaskListContext } from "../context/TaskList";
 import { useFetchTaskDataContext } from "../context/FetchTaskData";
@@ -13,8 +13,10 @@ type TaskListProps = {
 const TaskList = ({ taskStatusFilter }: TaskListProps) => {
   const { taskList, setTaskList } = useTaskListContext();
   const { fetchTasks, setFetchTasks } = useFetchTaskDataContext();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const fetchTaskList = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/tasks`,
@@ -31,6 +33,8 @@ const TaskList = ({ taskStatusFilter }: TaskListProps) => {
       const axiosErrorMessage = error?.response?.data?.message;
 
       toast.error(axiosErrorMessage ?? "Failed to fetch task list");
+    } finally {
+      setLoading(false);
     }
   }, [setTaskList]);
 
@@ -43,6 +47,8 @@ const TaskList = ({ taskStatusFilter }: TaskListProps) => {
       fetchTaskList();
     }
   }, [fetchTaskList, fetchTasks]);
+
+  if (loading) return <p>Loading Content...</p>;
 
   return (
     <TaskListContent taskList={taskList} taskStatusFilter={taskStatusFilter} />
