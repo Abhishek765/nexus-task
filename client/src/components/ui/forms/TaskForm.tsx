@@ -4,34 +4,19 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { Input } from "../inputs";
 import { Select } from "../selectors";
-import { OptionType } from "../selectors/Select/types";
 import { TextArea } from "../textarea";
 import { TASK_STATUS } from "../../../types/task.types";
-import { TASK_STATUS_MAP } from "../../../utils/constants";
-
-const options: OptionType[] = [
-  {
-    key: "TODO",
-    value: "To Do",
-  },
-  {
-    key: "IN_PROGRESS",
-    value: "In Progress",
-  },
-  {
-    key: "DONE",
-    value: "Done",
-  },
-];
+import { TASK_STATUS_MAP, taskOptions } from "../../../utils/constants";
+import { useFetchTaskDataContext } from "../../../context/FetchTaskData";
 
 const TaskForm = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [status, setStatus] = useState<
-    TASK_STATUS.TODO | TASK_STATUS.IN_PROGRESS | TASK_STATUS.DONE
-  >(TASK_STATUS.TODO);
+  const [status, setStatus] = useState<TASK_STATUS>(TASK_STATUS.TODO);
 
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+
+  const { setFetchTasks } = useFetchTaskDataContext();
 
   useEffect(() => {
     if (title.trim().length > 0 && description.trim().length > 0) {
@@ -59,8 +44,8 @@ const TaskForm = () => {
         },
         config
       );
-      console.log({ response });
-      toast.success("Task created!");
+      toast.success(`Task created! ${response.data.newTask.title}`);
+      setFetchTasks(true);
     } catch (error) {
       toast.error("Task creation Failed!");
     }
@@ -94,7 +79,7 @@ const TaskForm = () => {
         label="Status"
         value={status}
         setValue={setStatus}
-        options={options}
+        options={taskOptions}
       />
       <div>
         <PrimaryButton onClick={handleSubmit} disabled={!isButtonEnabled}>

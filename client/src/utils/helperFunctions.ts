@@ -1,3 +1,4 @@
+import { TASK_FILTER, TaskDataType } from "../types/task.types";
 import { VALID_EMAIL_REGEX } from "./constants";
 
 export const checkIsEmailValid = (email: string) => {
@@ -20,4 +21,11 @@ export const checkIsEmailValid = (email: string) => {
   if (!VALID_EMAIL_REGEX.test(email)) return false;
 
   return true;
+};
+
+export const filterTasksByStatus = (
+  taskStatusFilter: TASK_FILTER,
+  allTasks: TaskDataType[]
+) => {
+  return allTasks.filter((task) => task.status === taskStatusFilter);
 };

@@ -5,10 +5,12 @@ import { Toaster } from "react-hot-toast";
 import { ProtectedRoute } from "./hoc";
 import { Suspense, lazy, useEffect } from "react";
 import axios from "axios";
+import { FetchTaskDataProvider } from "./context/FetchTaskData";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 const App = () => {
   const { user, setUser } = useUserContext();
@@ -30,7 +32,14 @@ const App = () => {
         <Suspense fallback={<p>Loading...</p>}>
           <Routes>
             <Route element={<ProtectedRoute isUserPresent={Boolean(user)} />}>
-              <Route path="/" element={<HomePage />} />
+              <Route
+                path="/"
+                element={
+                  <FetchTaskDataProvider>
+                    <HomePage />
+                  </FetchTaskDataProvider>
+                }
+              />
             </Route>
 
             <Route
@@ -39,6 +48,8 @@ const App = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
             </Route>
+
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </BrowserRouter>

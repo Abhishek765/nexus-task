@@ -2,10 +2,17 @@ import axios from "axios";
 import { useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useTaskListContext } from "../context/TaskList";
-import { TaskCard } from "./ui/cards";
+import { useFetchTaskDataContext } from "../context/FetchTaskData";
+import { TASK_FILTER } from "../types/task.types";
+import TaskListContent from "./TaskListContent";
 
-const TaskList = () => {
+type TaskListProps = {
+  taskStatusFilter: TASK_FILTER;
+};
+
+const TaskList = ({ taskStatusFilter }: TaskListProps) => {
   const { taskList, setTaskList } = useTaskListContext();
+  const { fetchTasks, setFetchTasks } = useFetchTaskDataContext();
 
   const fetchTaskList = useCallback(async () => {
     try {
@@ -15,33 +22,30 @@ const TaskList = () => {
           withCredentials: true,
         }
       );
-      if (response.data?.tasks) setTaskList(response.data.tasks);
-
+      if (response.data?.tasks) {
+        setTaskList(response.data.tasks);
+      }
       toast.success("Fetching tasks...");
-    } catch (error) {
-      toast.error("Failed to fetch task list");
+      setFetchTasks(false);
+    } catch (error: any) {
+      const axiosErrorMessage = error?.response?.data?.message;
+
+      toast.error(axiosErrorMessage ?? "Failed to fetch task list");
     }
   }, [setTaskList]);
 
   useEffect(() => {
-    // fetchTaskList();
+    fetchTaskList();
   }, [fetchTaskList]);
 
+  useEffect(() => {
+    if (fetchTasks) {
+      fetchTaskList();
+    }
+  }, [fetchTaskList, fetchTasks]);
+
   return (
-    <div className="grid md:grid-cols-2 grid-cols-1 gap-4 mt-5">
-      {taskList?.map((task) => {
-        return (
-          <div key={task?.title}>
-            <TaskCard
-              _id={task._id}
-              title={task.title}
-              description={task.description}
-              status={task.status}
-            />
-          </div>
-        );
-      })}
-    </div>
+    <TaskListContent taskList={taskList} taskStatusFilter={taskStatusFilter} />
   );
 };
 

@@ -86,7 +86,7 @@ const Login = () => {
       <div className="min-h-screen flex items-center justify-center w-full ">
         <div className="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md min-w-[345px]">
           <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-200">
-            Welcome Back!
+            Login to see your tasks
           </h1>
           <Input
             id="email"

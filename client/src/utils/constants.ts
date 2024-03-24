@@ -1,3 +1,4 @@
+import { OptionType } from "../components/ui/selectors/Select/types";
 import {
   TASK_STATUS,
   TaskMapType,
@@ -24,3 +25,26 @@ export const TASK_STATUS_TO_VALUE_MAP: TaskStatusToValueMapType = {
   IN_PROGRESS: TASK_STATUS.IN_PROGRESS,
   DONE: TASK_STATUS.DONE,
 };
+
+export const taskOptions: OptionType[] = [
+  {
+    key: "TODO",
+    value: "To Do",
+  },
+  {
+    key: "IN_PROGRESS",
+    value: "In Progress",
+  },
+  {
+    key: "DONE",
+    value: "Done",
+  },
+];
+
+export const filterOptions: OptionType[] = [
+  ...taskOptions,
+  {
+    key: "ALL",
+    value: "All",
+  },
+];
