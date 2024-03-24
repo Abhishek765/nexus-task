@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TASK_FILTER, TaskDataType } from "../types/task.types";
 import { TaskCard } from "./ui/cards";
 import { filterTasksByStatus } from "../utils/helperFunctions";
