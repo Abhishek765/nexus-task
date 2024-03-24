@@ -44,8 +44,9 @@ const Register = () => {
       );
       toast.success("Registration successful");
       navigate("/login");
-    } catch (error) {
-      toast.error("Registration failed!");
+    } catch (error: any) {
+      const axiosErrorMessage = error?.response?.data?.message;
+      toast.error(axiosErrorMessage ?? "Registration failed!");
     } finally {
       setLoading(false);
     }
