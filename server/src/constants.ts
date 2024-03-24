@@ -11,6 +11,5 @@ export const cookieOptions: CookieOptions = {
   maxAge: 24 * 60 * 60 * 1000,
   sameSite: 'none',
   httpOnly: true,
-  domain: 'nexus-task-tau',
   secure: true
 };
