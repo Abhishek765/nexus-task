@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 
 interface OverlayProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: () => void | null;
   children: React.ReactNode;
 }
 

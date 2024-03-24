@@ -20,6 +20,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -33,7 +34,7 @@ const Login = () => {
         "Content-Type": "application/json",
       },
     };
-
+    setLoading(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/users/login`,
@@ -50,6 +51,8 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       toast.error("login failed!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -114,7 +117,9 @@ const Login = () => {
               Create Account
             </Link>
           </div>
-          <PrimaryButton onClick={handleFormSubmit}>Login</PrimaryButton>
+          <PrimaryButton onClick={handleFormSubmit} disabled={loading}>
+            {loading ? "Loading..." : "Login"}
+          </PrimaryButton>
         </div>
       </div>
     </>

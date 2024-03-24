@@ -6,6 +6,11 @@ import jwt from 'jsonwebtoken';
 import { AUTH_COOKIE_KEY, cookieOptions } from '../constants';
 import { CustomRequestType } from '../middlewares/auth';
 
+/**
+ * @description Register a new User
+ * @method POST
+ * @route /api/v1/users/register
+ */
 export const register = async (
   req: Request<{}, {}, CreateUserType>,
   res: Response
@@ -40,6 +45,11 @@ export const register = async (
   }
 };
 
+/**
+ * @description Login a User
+ * @method POST
+ * @route /api/v1/users/login
+ */
 export const login = async (
   req: Request<{}, {}, UserLoginType>,
   res: Response
@@ -90,6 +100,11 @@ export const login = async (
   }
 };
 
+/**
+ * @description Logout a User
+ * @method GET
+ * @route /api/v1/users/logout
+ */
 export const logout = async (
   _req: Request<{}, {}, UserLoginType>,
   res: Response
@@ -100,6 +115,11 @@ export const logout = async (
     .json({ message: 'Logged out successfully' });
 };
 
+/**
+ * @description Get User's details
+ * @method GET
+ * @route /api/v1/users/me
+ */
 export const getUserProfile = async (
   req: Request<{}, {}, UserLoginType> | CustomRequestType,
   res: Response

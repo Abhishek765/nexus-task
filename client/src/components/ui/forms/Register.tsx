@@ -15,12 +15,12 @@ const Register = () => {
     email: "",
     password: "",
   });
-
   const [errors, setErrors] = useState({
     name: "",
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -34,6 +34,8 @@ const Register = () => {
         "Content-Type": "application/json",
       },
     };
+    setLoading(true);
+
     try {
       await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/users/register`,
@@ -44,6 +46,8 @@ const Register = () => {
       navigate("/login");
     } catch (error) {
       toast.error("Registration failed!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -127,7 +131,9 @@ const Register = () => {
               Already have an account? Sign In!
             </Link>
           </div>
-          <PrimaryButton onClick={handleFormSubmit}>Sign up</PrimaryButton>
+          <PrimaryButton onClick={handleFormSubmit} disabled={loading}>
+            {loading ? "Loading..." : "Sign up"}
+          </PrimaryButton>
         </div>
       </div>
     </>

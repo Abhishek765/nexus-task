@@ -1,6 +1,11 @@
 import { Request, Response } from 'express';
 import { TaskModel } from '../models/task.model';
 
+/**
+ * @description To create a new task
+ * @method POST
+ * @route /api/v1/tasks
+ */
 export const createTask = async (req: Request, res: Response) => {
   const newTask = new TaskModel({
     ...req.body,
@@ -18,6 +23,11 @@ export const createTask = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @description To get all tasks related to a user
+ * @method GET
+ * @route /api/v1/tasks
+ */
 export const getAllTasks = async (req: Request, res: Response) => {
   try {
     const tasks = await TaskModel.find({ owner: (req as any).user._id });
@@ -35,6 +45,11 @@ export const getAllTasks = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @description To get a single task related to a user if taskId is specified
+ * @method GET
+ * @route /api/v1/tasks/:id
+ */
 export const getSingleTask = async (req: Request, res: Response) => {
   const _id = req.params.id;
 
@@ -54,9 +69,13 @@ export const getSingleTask = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @description To update a single task related to a user if taskId is specified
+ * @method PATCH
+ * @route /api/v1/tasks/:id
+ */
 export const updateTaskStatus = async (req: Request, res: Response) => {
   const _id = req.params.id;
-  const { status } = req.body;
 
   try {
     const updatedTask = await TaskModel.findOneAndUpdate(
@@ -78,6 +97,11 @@ export const updateTaskStatus = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @description To delete a single task related to a user if taskId is specified
+ * @method DELETE
+ * @route /api/v1/tasks/:id
+ */
 export const deleteTask = async (req: Request, res: Response) => {
   const _id = req.params.id;
 

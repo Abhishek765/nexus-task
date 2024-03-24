@@ -19,6 +19,9 @@ import { PrimaryButton } from "../buttons";
 const TaskCard = ({ _id, title, description, status }: TaskDataType) => {
   const { setFetchTasks } = useFetchTaskDataContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
+  const [isUpdateLoading, setIsUpdateLoading] = useState<boolean>(false);
+
   const [updatedStatus, setUpdatedStatus] = useState<TASK_STATUS>(
     TASK_STATUS_TO_VALUE_MAP[status as BACKEND_TASK_STATUS]
   );
@@ -30,7 +33,7 @@ const TaskCard = ({ _id, title, description, status }: TaskDataType) => {
         "Content-Type": "application/json",
       },
     };
-
+    setIsDeleteLoading(true);
     try {
       const response = await axios.delete(
         `${import.meta.env.VITE_SERVER_URL}/tasks/${taskId}`,
@@ -42,6 +45,8 @@ const TaskCard = ({ _id, title, description, status }: TaskDataType) => {
       setFetchTasks(true);
     } catch (error) {
       toast.error("Task Deletion Failed!");
+    } finally {
+      setIsDeleteLoading(false);
     }
   };
 
@@ -60,7 +65,7 @@ const TaskCard = ({ _id, title, description, status }: TaskDataType) => {
         "Content-Type": "application/json",
       },
     };
-
+    setIsUpdateLoading(true);
     try {
       const response = await axios.patch(
         `${import.meta.env.VITE_SERVER_URL}/tasks/${taskId}`,
@@ -77,6 +82,7 @@ const TaskCard = ({ _id, title, description, status }: TaskDataType) => {
       toast.error("Updating Task Failed!");
     } finally {
       handleCloseOverlay();
+      setIsUpdateLoading(false);
     }
   };
 
@@ -99,10 +105,11 @@ const TaskCard = ({ _id, title, description, status }: TaskDataType) => {
           </span>
           <div>
             <button
-              className="px-3 py-1 bg-red-500 text-white rounded mr-2"
+              disabled={isDeleteLoading}
+              className="px-3 py-1 disabled:bg-red-300 bg-red-500 text-white rounded mr-2"
               onClick={() => handleDelete(_id)}
             >
-              Delete
+              {isDeleteLoading ? "Loading..." : "Delete"}
             </button>
             <button
               className="px-3 py-1 bg-blue-500 text-white rounded"
@@ -113,7 +120,10 @@ const TaskCard = ({ _id, title, description, status }: TaskDataType) => {
           </div>
         </div>
       </div>
-      <Overlay isOpen={isOpen} onClose={handleCloseOverlay}>
+      <Overlay
+        isOpen={isOpen}
+        onClose={isUpdateLoading ? () => {} : handleCloseOverlay}
+      >
         <div className=" min-w-[300px] space-y-4">
           <Select
             label="Update status"
@@ -122,8 +132,11 @@ const TaskCard = ({ _id, title, description, status }: TaskDataType) => {
             options={taskOptions}
           />
 
-          <PrimaryButton onClick={() => handleUpdateStatus(_id)}>
-            update
+          <PrimaryButton
+            onClick={() => handleUpdateStatus(_id)}
+            disabled={isUpdateLoading}
+          >
+            {isUpdateLoading ? "Loading..." : "update"}
           </PrimaryButton>
         </div>
       </Overlay>

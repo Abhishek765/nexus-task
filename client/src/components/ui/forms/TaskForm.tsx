@@ -14,7 +14,8 @@ const TaskForm = () => {
   const [description, setDescription] = useState<string>("");
   const [status, setStatus] = useState<TASK_STATUS>(TASK_STATUS.TODO);
 
-  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+  const [isButtonEnabled, setIsButtonEnabled] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { setFetchTasks } = useFetchTaskDataContext();
 
@@ -33,7 +34,7 @@ const TaskForm = () => {
         "Content-Type": "application/json",
       },
     };
-
+    setLoading(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/tasks`,
@@ -48,11 +49,12 @@ const TaskForm = () => {
       setFetchTasks(true);
     } catch (error) {
       toast.error("Task creation Failed!");
+    } finally {
+      setLoading(false);
+      setTitle("");
+      setDescription("");
+      setStatus(TASK_STATUS.TODO);
     }
-
-    setTitle("");
-    setDescription("");
-    setStatus(TASK_STATUS.TODO);
   };
 
   return (
@@ -82,8 +84,11 @@ const TaskForm = () => {
         options={taskOptions}
       />
       <div>
-        <PrimaryButton onClick={handleSubmit} disabled={!isButtonEnabled}>
-          Add Task
+        <PrimaryButton
+          onClick={handleSubmit}
+          disabled={!isButtonEnabled || loading}
+        >
+          {loading ? "Loading..." : "Add Task"}
         </PrimaryButton>
       </div>
     </div>
